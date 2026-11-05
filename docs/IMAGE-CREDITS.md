@@ -19,8 +19,6 @@ The photos in `public/images/people/` come from [Pexels](https://www.pexels.com)
 
 The characters are fictional. Their names, jobs and AI-written messages have nothing to do with the people photographed or with the photographers, and none of those people endorse or are affiliated with this project.
 
-If someone in a photo asks for it to be removed, replace it right away.
-
 ## Games
 
 The pictures in `public/images/banners/` and `public/images/highlights/` were generated with FLUX on Workers AI, using `scripts/generate-images.mjs`.
