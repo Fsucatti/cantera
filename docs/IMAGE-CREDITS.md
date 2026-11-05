@@ -2,24 +2,24 @@
 
 ## People
 
-The photos in `public/images/people/` come from [Pexels](https://www.pexels.com). All of them are under the [Pexels License](https://www.pexels.com/license/), checked on November 4, 2026. They were cropped to a square, resized to 320x320 and converted to WebP.
+The photos in `public/images/people/` come from [Pexels](https://www.pexels.com), under the [Pexels License](https://www.pexels.com/license/), checked on November 4, 2026. They were cropped to the face, resized to 320x320 and converted to WebP.
 
-| File | Character | Photo | Author | License |
-|---|---|---|---|---|
-| `alex.webp` | Sample guest profile | [Man in front of Screen](https://www.pexels.com/photo/man-in-front-of-screen-15870665/) | Ronan De klerk | Pexels License |
-| `mara.webp` | Mara Quinn | [Back View of a Woman with Tousled Brown Hair Standing on a Green Field](https://www.pexels.com/photo/back-view-of-a-woman-with-tousled-brown-hair-standing-on-a-green-field-16830792/) | Beyzaa | Pexels License |
-| `devon.webp` | Devon Achebe | [Person with Afro Hair Using a Computer](https://www.pexels.com/photo/person-with-afro-hair-using-a-computer-5185177/) | [cottonbro studio](https://www.pexels.com/@cottonbro/) | Pexels License |
-| `yuki.webp` | Yuki Tanabe | [Person Facing a Big Screen with Numbers](https://www.pexels.com/photo/person-facing-a-big-screen-with-numbers-9783346/) | [Ron Lach](https://www.pexels.com/@ron-lach/) | Pexels License |
-| `rafa.webp` | Rafa Moreno | [Unrecognizable man working on computer at home](https://www.pexels.com/photo/unrecognizable-man-working-on-computer-at-home-6177553/) | [Cup of Couple](https://www.pexels.com/@cup-of-couple/) | Pexels License |
-| `nadia.webp` | Nadia Farouk | [Back View of a Woman with Long Hair Wearing a Denim Jacket](https://www.pexels.com/photo/back-view-of-a-woman-with-long-hair-wearing-a-denim-jacket-9657052/) | Igreja Dimensão | Pexels License |
-| `tomas.webp` | Tomas Lind | [A Man Sitting at the Table](https://www.pexels.com/photo/a-man-sitting-at-the-table-5717787/) | [Kaboompics](https://www.pexels.com/@karola-g/) | Pexels License |
-| `priya.webp` | Priya Raman | [Back View of a Person Wearing a Light Blue Blazer](https://www.pexels.com/photo/back-view-of-a-person-wearing-a-light-blue-blazer-9168131/) | [cottonbro studio](https://www.pexels.com/@cottonbro/) | Pexels License |
-| `kofi.webp` | Kofi Mensah | [Back of Person in Hoodie](https://www.pexels.com/photo/back-of-person-in-hoodie-15564085/) | Marsel_Shots | Pexels License |
-| `lena.webp` | Lena Brandt | [Unrecognizable model touching wavy red hair on stool](https://www.pexels.com/photo/unrecognizable-model-touching-wavy-red-hair-on-stool-7611479/) | Jenny Uhling | Pexels License |
+| File | Character | Photo | Author |
+|---|---|---|---|
+| `alex.webp` | Sample guest profile | [Man Wearing White Headphones](https://www.pexels.com/photo/man-wearing-white-headphones-3394657/) | [Sound On](https://www.pexels.com/@sound-on/) |
+| `mara.webp` | Mara Quinn | [Face of Woman with Brown Hair](https://www.pexels.com/photo/face-of-woman-with-brown-hair-15116521/) | [shazardr](https://www.pexels.com/@shazardr/) |
+| `devon.webp` | Devon Achebe | [Portrait of Man](https://www.pexels.com/photo/portrait-of-man-16881939/) | [Ali Dashti](https://www.pexels.com/@ali-dashti-506667798/) |
+| `yuki.webp` | Yuki Tanabe | [Photo of a Woman Smiling](https://www.pexels.com/photo/photo-of-a-woman-smiling-1520760/) | [Đỗ Ngọc Tú Quyên](https://www.pexels.com/@doquyen/) |
+| `rafa.webp` | Rafa Moreno | [Man in Jean Jacket](https://www.pexels.com/photo/man-in-jean-jacket-16160864/) | [pessoas uem](https://www.pexels.com/@pessoas-uem-503045317/) |
+| `nadia.webp` | Nadia Farouk | [A Beautiful Woman in Black Blazer](https://www.pexels.com/photo/a-beautiful-woman-in-black-blazer-7860654/) | [Dario Moscato](https://www.pexels.com/@dario-moscato-56316545/) |
+| `tomas.webp` | Tomas Lind | [Black and White Photo of a Man Wearing Eyeglasses](https://www.pexels.com/photo/black-and-white-photo-of-a-man-wearing-eyeglasses-14739585/) | [Farhad Rahgozar](https://www.pexels.com/@farhadrahgozar/) |
+| `priya.webp` | Priya Raman | [A Woman in Red and Blue Saree Dress](https://www.pexels.com/photo/a-woman-in-red-and-blue-saree-dress-7275701/) | [GM ISLAM](https://www.pexels.com/@rina/) |
+| `kofi.webp` | Kofi Mensah | [Portrait of a Man with Greenery in Background](https://www.pexels.com/photo/portrait-of-a-man-with-greenery-in-background-40494199/) | [hashtag-melvin](https://www.pexels.com/@hashtag-melvin-1163687/) |
+| `lena.webp` | Lena Brandt | [A Woman with Redheaded](https://www.pexels.com/photo/a-woman-with-redheaded-13871770/) | [bertellifotografia](https://www.pexels.com/@bertellifotografia/) |
 
-The characters are fictional. Their names, jobs and AI-written messages have nothing to do with the people photographed or with the photographers.
+The characters are fictional. Their names, jobs and AI-written messages have nothing to do with the people photographed or with the photographers, and none of those people endorse or are affiliated with this project.
 
-Every photo shows someone from behind, so nobody can be recognized. That's deliberate: the [Pexels terms](https://www.pexels.com/terms-of-service/) don't allow suggesting that a person in a photo is affiliated with a product. Don't swap these for photos where a face is visible.
+If someone in a photo asks for it to be removed, replace it right away.
 
 ## Games
 

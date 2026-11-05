@@ -61,6 +61,7 @@ function Thread({ personId, onSent }: { personId: string; onSent: () => void }) 
         <div>
           <h2>{person.name}</h2>
           <p className="small">{person.role}. {person.bio}</p>
+          <p className="muted small">Fictional character. Replies are written by AI.</p>
         </div>
       </section>
       <section className="panel thread" aria-label={`Conversation with ${person.name}`}>

@@ -10,7 +10,7 @@ A talent platform for esports. Players build a profile, find teams and roles, ap
 
 Design by **Julian Sucatti**. Built by **Francisco Sucatti**.
 
-Every team, game and person in the app is invented. Game pictures are AI-generated, and people's pictures are stock photos taken from behind, with [credits here](docs/IMAGE-CREDITS.md).
+Every team, game and character in the app is invented. Game pictures are AI-generated. Characters use stock photos, with [credits here](docs/IMAGE-CREDITS.md): the people photographed have no connection to this project.
 
 ## Getting started
 

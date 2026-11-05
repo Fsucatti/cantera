@@ -133,6 +133,8 @@ export function CreditLine() {
     <p className="credit">
       Design by Julian Sucatti · Built by{" "}
       <a href="https://fsucatti-portfolio.fsucatti-portfolio.workers.dev" target="_blank" rel="noreferrer">Francisco Sucatti</a>
+      <br />
+      Characters are fictional. Photos of people from <a href="https://www.pexels.com" target="_blank" rel="noreferrer">Pexels</a>, unrelated to this project.
     </p>
   );
 }

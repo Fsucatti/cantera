@@ -8,7 +8,7 @@ export function People() {
   return (
     <div className="page">
       <h1 className="page-title">People</h1>
-      <p className="muted page-note">Everyone here is fictional, and their replies are written by AI.</p>
+      <p className="muted page-note">These characters are fictional and their replies are written by AI. Their photos are stock images of people unrelated to this project.</p>
       <Status loading={loading} error={error} onRetry={reload} />
       <div className="people-grid">
         {data?.map((person) => (
