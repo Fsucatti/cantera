@@ -1,0 +1,40 @@
+{
+  "name": "cantera",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A talent platform for esports: profiles, jobs, applications and messaging, on Cloudflare's free tier.",
+  "scripts": {
+    "dev": "vite",
+    "dev:api": "wrangler dev --port 8788",
+    "db:local": "wrangler d1 migrations apply cantera --local",
+    "db:remote": "wrangler d1 migrations apply cantera --remote",
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "npm run build && npm run db:local && playwright test",
+    "build": "tsc --noEmit && vite build",
+    "preview": "npm run build && npm run db:local && wrangler dev --port 8788",
+    "deploy": "npm run build && npm run db:remote && wrangler deploy"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "hono": "^4.13.16",
+    "lucide-react": "^1.68.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261104.1",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "sharp": "^0.35.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.157.0"
+  }
+}
