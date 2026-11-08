@@ -10,7 +10,7 @@ A talent platform for esports. Players build a profile, find teams and roles, ap
 
 Design by **Julian Sucatti**. Built by **Francisco Sucatti**.
 
-Every team, game and character in the app is invented. Game pictures are AI-generated. Characters use stock photos, with [credits here](docs/IMAGE-CREDITS.md): the people photographed have no connection to this project.
+Every team, game and character in the app is invented. Game and team pictures are AI-generated, and the logos were drawn for this project. Characters use stock photos, with [credits here](docs/IMAGE-CREDITS.md): the people photographed have no connection to this project.
 
 ## Getting started
 
@@ -21,7 +21,7 @@ Then try this path:
 1. On the home screen, check **Your Newest matches**, ranked by how well your skills fit each role.
 2. Open a match and click **Apply for this position**.
 3. The recruiter writes to you in the **Inbox**. Answer them: replies are written by AI, in your language.
-4. Go to your profile, in the bottom left, and change your skills. Your matches change too.
+4. Go to your profile and change your skills. Your matches change too.
 
 ## What you can do
 
@@ -30,7 +30,8 @@ Then try this path:
 | **Home** | Job matches, your applications, teams to follow, and a community feed |
 | **Jobs Board** | Search, filters by type, saved listings, and full role descriptions |
 | **Applications** | Apply with a note, withdraw, and get a message from the recruiter |
-| **Teams** | Team pages with open roles, and following |
+| **Games** | How each game plays, its roles, tournaments and slang, and its open roles |
+| **Teams** | Team stories, honors, rosters and open roles, and following |
 | **People** | Fictional coaches, recruiters and creators you can message |
 | **Inbox** | Conversations with unread counts and notifications |
 | **Profile** | Avatar, background, skills, work history, awards, highlights and linked accounts |

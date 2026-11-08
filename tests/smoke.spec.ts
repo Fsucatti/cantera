@@ -118,8 +118,13 @@ test("the jobs board filters, searches and saves", async ({ page }) => {
 
   await page.getByRole("button", { name: "Games" }).click();
   await expect(page.locator(".game-card")).toHaveCount(4);
-  await page.locator(".game-card", { hasText: "Kingsfall" }).click();
-  await expect(page.getByRole("heading", { name: 'Results for "Kingsfall"' })).toBeVisible();
+
+  await page.getByRole("button", { name: "All", exact: true }).click();
+  await page.getByLabel("Search listings").fill("Railhead");
+  await page.getByLabel("Search listings").press("Enter");
+  await expect(page.getByRole("heading", { name: 'Results for "Railhead"' })).toBeVisible();
+  await expect(page.locator(".job-card")).toHaveCount(2);
+  await expect(page.locator(".job-card", { hasText: "Pro Player | Railhead" })).toBeVisible();
 
   await page.getByLabel("Search listings").fill("zzzz");
   await page.getByLabel("Search listings").press("Enter");
@@ -135,19 +140,19 @@ test("the jobs board filters, searches and saves", async ({ page }) => {
 
 test("applying opens a recruiter conversation, and can be withdrawn", async ({ page }) => {
   await asGuest(page);
-  await page.goto("/jobs/entry-fragger-na");
-  await expect(page.getByRole("heading", { name: "Entry Fragger, Vantage Strike" })).toBeVisible();
+  await page.goto("/jobs/entry-fragger");
+  await expect(page.getByRole("heading", { name: "Entry Fragger, Deadband" })).toBeVisible();
   await page.getByRole("button", { name: "Apply for this position" }).click();
   await page.getByLabel(/good fit/).fill("I have a great entry record.");
   await page.getByRole("button", { name: "Send application" }).click();
 
   await expect(page).toHaveURL(/\/inbox\/devon/);
-  await expect(page.getByLabel("Conversation with Devon Achebe")).toContainText("Entry Fragger, Vantage Strike");
+  await expect(page.getByLabel("Conversation with Devon Achebe")).toContainText("Entry Fragger, Deadband");
 
   await page.goto("/");
-  await expect(page.getByRole("link", { name: "Review Entry Fragger, Vantage Strike" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Review Entry Fragger, Deadband" })).toBeVisible();
 
-  await page.goto("/jobs/entry-fragger-na");
+  await page.goto("/jobs/entry-fragger");
   await page.getByRole("button", { name: "Withdraw application" }).click();
   await expect(page.getByRole("button", { name: "Apply for this position" })).toBeVisible();
 });
@@ -202,7 +207,7 @@ test("the inbox shows the seeded thread, sends messages and clears unread", asyn
   await page.getByRole("link", { name: "Inbox" }).click();
   await expect(page.getByText("1", { exact: true })).toBeVisible();
   await page.locator(".inbox-item", { hasText: "Mara Quinn" }).click();
-  await expect(page.locator(".thread")).toContainText("support guide");
+  await expect(page.locator(".thread")).toContainText("Anchor guide");
   await expect(page.locator(".unread")).toHaveCount(0);
 
   await page.getByLabel("Message").fill("I'm free on Thursday.");
@@ -219,16 +224,53 @@ test("search finds games, jobs, teams and people, and navigates", async ({ page 
   await asGuest(page);
   await page.getByRole("button", { name: "Search" }).click();
   await expect(page.getByRole("heading", { name: "Top Games" })).toBeVisible();
-  await page.getByLabel("Search team, tag or player").fill("frostline");
-  await expect(page.getByRole("button", { name: /Frostline Esports, Oslo/ })).toBeVisible();
-  await page.getByRole("button", { name: /Frostline Esports, Oslo/ }).click();
-  await expect(page).toHaveURL(/\/teams\/frostline/);
-  await expect(page.getByRole("heading", { name: "About Frostline Esports" })).toBeVisible();
+  await page.getByLabel("Search team, tag or player").fill("kaamos");
+  await expect(page.getByRole("button", { name: /Kaamos, Rovaniemi/ })).toBeVisible();
+  await page.getByRole("button", { name: /Kaamos, Rovaniemi/ }).click();
+  await expect(page).toHaveURL(/\/teams\/kaamos/);
+  await expect(page.getByRole("heading", { name: "About Kaamos" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Follow Frostline Esports" }).click();
-  await expect(page.getByRole("button", { name: "Unfollow Frostline Esports" })).toBeVisible();
+  await page.getByRole("button", { name: "Follow Kaamos" }).click();
+  await expect(page.getByRole("button", { name: "Unfollow Kaamos" })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole("button", { name: "Unfollow Frostline Esports" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Unfollow Kaamos" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Search" }).click();
+  await page.getByLabel("Search team, tag or player").fill("hfx");
+  await expect(page.getByRole("button", { name: /Halifax Undertow, Halifax/ })).toBeVisible();
+  await page.getByLabel("Search team, tag or player").fill("real-time");
+  await page.locator(".search-row", { hasText: "Railhead" }).click();
+  await expect(page).toHaveURL(/\/games\/railhead/);
+});
+
+test("game and team pages show their detail and link to each other", async ({ page }) => {
+  await asGuest(page);
+  await page.goto("/jobs?category=game");
+  await page.getByRole("link", { name: /Deadband/ }).click();
+  await expect(page).toHaveURL(/\/games\/deadband/);
+  await expect(page.getByRole("heading", { name: "Deadband" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "The competitive circuit" })).toBeVisible();
+  await expect(page.getByText("Silent retake", { exact: true })).toBeVisible();
+  await expect(page.getByText("Ninth Relay")).toBeVisible();
+  await expect(page.locator(".job-card").first()).toBeVisible();
+
+  await page.getByRole("link", { name: "B2", exact: true }).click();
+  await expect(page).toHaveURL(/\/teams\/b2/);
+  await expect(page.getByRole("heading", { name: "Deadband roster" })).toBeVisible();
+  await expect(page.getByText("Banjang")).toBeVisible();
+  await expect(page.locator(".honor-win").first()).toContainText("Champions");
+
+  const broken = await page.evaluate(async () => {
+    await Promise.all([...document.images].map((image) => (image.complete ? null : new Promise((done) => { image.onload = image.onerror = done; }))));
+    return [...document.images].filter((image) => image.naturalWidth === 0).map((image) => image.src);
+  });
+  expect(broken).toEqual([]);
+
+  await page.getByRole("link", { name: "Message Devon Achebe" }).click();
+  await expect(page).toHaveURL(/\/inbox\/devon/);
+
+  await page.goto("/games/nope");
+  await expect(page.getByRole("alert")).toContainText("doesn't exist");
 });
 
 test("the profile saves, including an uploaded picture", async ({ page }) => {
@@ -256,11 +298,11 @@ test("work history, awards, highlights and linked accounts can be added and remo
   await page.goto("/settings/work");
   await expect(page.locator(".work-list li")).toHaveCount(3);
   await page.getByRole("button", { name: "+ Add New Experience" }).click();
-  await page.getByLabel("Team", { exact: true }).fill("Stormhowl");
+  await page.getByLabel("Team", { exact: true }).fill("Kaamos");
   await page.getByLabel("Period").fill("2020 - 2021");
   await page.getByRole("button", { name: "Add", exact: true }).click();
   await expect(page.locator(".work-list li")).toHaveCount(4);
-  await page.getByRole("button", { name: "Remove Stormhowl" }).click();
+  await page.getByRole("button", { name: "Remove Kaamos" }).click();
   await expect(page.locator(".work-list li")).toHaveCount(3);
 
   await page.goto("/settings/awards");
@@ -274,7 +316,7 @@ test("work history, awards, highlights and linked accounts can be added and remo
   await expect(page.locator(".highlight")).toHaveCount(4);
   await page.getByRole("button", { name: "+ Add New Highlight" }).click();
   await page.getByLabel("Title").fill("Ace round");
-  await page.getByLabel("Thumbnail").selectOption("siege");
+  await page.getByLabel("Thumbnail").selectOption("beached");
   await page.getByRole("button", { name: "Add", exact: true }).click();
   await expect(page.locator(".highlight", { hasText: "Ace round" })).toBeVisible();
 
@@ -382,7 +424,7 @@ test("@mobile the app works on a phone with no sideways scroll", async ({ page }
   await page.getByRole("button", { name: "Try it as a guest" }).click();
   await expect(page.getByRole("heading", { name: "Hi Again, Alex!" })).toBeVisible();
 
-  for (const path of ["/", "/jobs", "/jobs/entry-fragger-na", "/teams", "/teams/frostline", "/people", "/inbox", "/inbox/mara", "/settings/profile", "/settings/awards", "/settings/highlights", "/settings/work", "/settings/linked"]) {
+  for (const path of ["/", "/jobs", "/jobs?category=game", "/jobs/entry-fragger", "/games/deadband", "/games/curfew", "/teams", "/teams/atletico-latencia", "/teams/b2", "/people", "/inbox", "/inbox/mara", "/settings/profile", "/settings/awards", "/settings/highlights", "/settings/work", "/settings/linked"]) {
     await page.goto(path);
     await page.waitForLoadState("networkidle");
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -393,4 +435,39 @@ test("@mobile the app works on a phone with no sideways scroll", async ({ page }
   await expect(page.getByRole("link", { name: "Back to conversations" })).toBeVisible();
   await page.getByRole("button", { name: /Notifications/ }).click();
   await expect(page.getByRole("heading", { name: "Notifications" })).toBeVisible();
+});
+
+test("@mobile phones get a top bar and five evenly spaced, labeled tabs", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Try it as a guest" }).click();
+  await expect(page.getByRole("heading", { name: "Hi Again, Alex!" })).toBeVisible();
+
+  const layout = await page.evaluate(() => {
+    const box = (element: Element) => element.getBoundingClientRect();
+    const tabs = [...document.querySelectorAll(".nav-tabs .nav-item")].map((tab) => ({ left: box(tab).left, right: box(tab).right, bottom: box(tab).bottom, label: tab.textContent }));
+    const top = ["Cantera home", "Search", "Your profile and settings"].map((name) => box(document.querySelector(`[aria-label="${name}"]`) as Element).bottom);
+    return { tabs, top, width: innerWidth, height: innerHeight };
+  });
+  expect(layout.tabs.map((tab) => tab.label)).toEqual(["Home", "Jobs", "Teams", "People", "Inbox"]);
+  const widths = layout.tabs.map((tab) => tab.right - tab.left);
+  expect(Math.max(...widths) - Math.min(...widths)).toBeLessThan(1);
+  expect(layout.tabs[0].left).toBe(0);
+  expect(layout.tabs[4].right).toBeCloseTo(layout.width, 0);
+  expect(layout.tabs[0].bottom).toBeCloseTo(layout.height, 0);
+  for (const bottom of layout.top) expect(bottom).toBeLessThan(60);
+
+  // Both bars stay put while the page scrolls, and the last thing on the page can still be reached.
+  await page.waitForLoadState("networkidle");
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await expect(page.getByRole("button", { name: "Search" })).toBeInViewport();
+  await expect(page.getByRole("link", { name: "Inbox" })).toBeInViewport();
+  const clearance = await page.evaluate(() => {
+    const tabs = (document.querySelector(".nav-tabs") as Element).getBoundingClientRect();
+    return tabs.top - (document.querySelector(".credit") as Element).getBoundingClientRect().bottom;
+  });
+  expect(clearance).toBeGreaterThanOrEqual(0);
+
+  await page.getByRole("link", { name: "Inbox" }).click();
+  await expect(page).toHaveURL(/\/inbox/);
+  await expect(page.getByRole("link", { name: "Inbox" })).toHaveClass(/active/);
 });

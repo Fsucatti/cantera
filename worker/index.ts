@@ -33,7 +33,9 @@ import {
   matchScore,
   personAvatar,
   recruiterFor,
+  teamContact,
   tidyReply,
+  worldBriefFor,
 } from "./catalog";
 import { SESSION_COOKIE, SESSION_SECONDS, hashProof, isPasswordProof, randomHex, safeEqual, sha256Hex } from "./security";
 
@@ -188,20 +190,20 @@ app.get("/session", async (c) => {
 async function seedGuest(db: D1Database, userId: string): Promise<void> {
   const now = Date.now();
   const work = [
-    ["Dune Raiders Academy", "2024 - Present", "Buenos Aires", "2 Years"],
-    ["Voidlight", "2022 - 2024", "Remote", "2 Years"],
-    ["Open Ladder Collective", "2021 - 2022", "Remote", "1 Year"],
+    ["Atlético Latencia Academy", "2024 - Present", "Buenos Aires", "2 Years"],
+    ["Second Division, Second Monitor", "2023 - 2024", "Remote", "1 Year"],
+    ["Open Ladder Collective", "2021 - 2023", "Remote", "2 Years"],
   ];
   const awards = [
-    ["2025 Southern Legends Championship", "Ember Arena", "Regional", "+800 Participants", "Reached the finals after a run through the regional qualifiers, as starting support.", "gold"],
-    ["2024 Mid-Season Open", "Ember Arena", "International", "+900 Participants", "Qualified through the spring split and finished in the top eight.", "silver"],
-    ["2024 Community Cup", "Vantage Strike", "Online Event", "~1500 Participants", "Competed in an open online tournament and advanced from the group stage.", "bronze"],
+    ["2025 Cono Sur League, Second Tier", "Wrackline", "Regional", "+800 Participants", "Won the final as starting Anchor, after coming through the open qualifiers.", "gold"],
+    ["2024 Spring Tide Qualifier", "Wrackline", "International", "+900 Participants", "Reached the last round of the southern qualifier and lost the deciding game on the final tide.", "silver"],
+    ["2024 Shortwave Open", "Deadband", "Online Event", "~1500 Participants", "Entered as a stand-in Carrier and made it out of the group stage.", "bronze"],
   ];
   const highlights = [
-    ["Final Match, Southern Legends", "clash", "15:31 minutes", "July 19, 2025", "1.5M views"],
-    ["Mid-Season Highlights", "river", "41:21 minutes", "May 3, 2024", "575K views"],
-    ["Community Cup Run", "forest", "21:13 minutes", "September 4, 2024", "125K views"],
-    ["Comeback at the Crystal", "siege", "8:02 minutes", "March 12, 2025", "25K views"],
+    ["Last Tide, Cono Sur Final", "tide", "15:31 minutes", "July 19, 2025", "1.5M views"],
+    ["Neap Split Highlights", "shoal", "41:21 minutes", "May 3, 2024", "575K views"],
+    ["Shortwave Open Run", "retake", "21:13 minutes", "September 4, 2024", "125K views"],
+    ["Beached and Back", "beached", "8:02 minutes", "March 12, 2025", "25K views"],
   ];
   await db.batch([
     ...work.map((row, index) =>
@@ -216,10 +218,10 @@ async function seedGuest(db: D1Database, userId: string): Promise<void> {
       db.prepare("INSERT INTO highlights (id, user_id, title, thumbnail, duration, played_on, views, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
         .bind(randomHex(12), userId, ...row, now - index),
     ),
-    db.prepare("INSERT INTO linked_accounts (user_id, account_key, handle) VALUES (?, 'ember-arena', 'alexr#LAS')").bind(userId),
+    db.prepare("INSERT INTO linked_accounts (user_id, account_key, handle) VALUES (?, 'wrackline', 'alexr#SUR')").bind(userId),
     db.prepare("INSERT INTO applications (user_id, listing_id, note, created_at) VALUES (?, 'guide-writer', '', ?)").bind(userId, now),
     db.prepare("INSERT INTO messages (id, user_id, person_id, from_user, body, read, created_at) VALUES (?, ?, 'mara', 0, ?, 0, ?)")
-      .bind(randomHex(12), userId, "Hi Alex! Thanks for applying to write our support guide. What's the one thing you wish someone had told you when you started?", now),
+      .bind(randomHex(12), userId, "Hi Alex! Thanks for applying to write our Anchor guide. What's the one thing you wish someone had told you when you started?", now),
   ]);
 }
 
@@ -236,7 +238,7 @@ app.post("/auth/guest", async (c) => {
       `guest-${id}@guest.invalid`,
       "Alex Rivera",
       "alexr",
-      "Competitive Ember Arena support with a deep understanding of team dynamics and high-pressure decision making. Always aiming for the next win, on and off the arena.",
+      "Wrackline Anchor from the Cono Sur circuit. I call the crossings, keep my Harpoon out of the water, and review more replays than is probably healthy.",
       "Argentina",
       personAvatar("alex"),
       JSON.stringify(skills),
@@ -372,7 +374,16 @@ async function decorate(c: C, listings: Listing[]): Promise<Listing[]> {
 
 const contains = (haystack: string, needle: string) => haystack.toLowerCase().includes(needle);
 
-app.get("/games", (c) => c.json(GAMES));
+app.get("/games", (c) =>
+  c.json(GAMES.map((game) => ({ ...game, openRoles: LISTINGS.filter((listing) => listing.gameId === game.id).length }))),
+);
+
+app.get("/games/:id", async (c) => {
+  const game = GAMES.find((candidate) => candidate.id === c.req.param("id"));
+  if (!game) throw fail(404, "That game doesn't exist.");
+  const listings = await decorate(c, LISTINGS.filter((listing) => listing.gameId === game.id));
+  return c.json({ ...game, openRoles: listings.length, teams: TEAMS.filter((team) => team.gameIds.includes(game.id)), listings });
+});
 
 app.get("/listings", async (c) => {
   const category = c.req.query("category");
@@ -410,7 +421,7 @@ app.get("/teams/:id", async (c) => {
   if (!team) throw fail(404, "That team doesn't exist.");
   const follow = await c.env.DB.prepare("SELECT 1 FROM follows WHERE user_id = ? AND team_id = ?").bind(uid(c), team.id).first();
   const listings = await decorate(c, LISTINGS.filter((listing) => listing.teamId === team.id));
-  return c.json({ ...team, following: Boolean(follow), listings });
+  return c.json({ ...team, following: Boolean(follow), listings, contact: teamContact(team.id) });
 });
 
 app.get("/people", (c) => c.json(PEOPLE));
@@ -420,10 +431,10 @@ app.get("/search", async (c) => {
   const match = (value: string) => !query || contains(value, query);
   const listings = LISTINGS.filter((listing) => match(`${listing.title} ${listing.teamName} ${listing.gameName} ${listing.category}`));
   return c.json({
-    games: GAMES.filter((game) => match(`${game.name} ${game.genre}`)),
+    games: GAMES.filter((game) => match(`${game.name} ${game.genre} ${game.studio}`)),
     listings: await decorate(c, listings),
     people: PEOPLE.filter((person) => match(`${person.name} ${person.role} ${person.headline}`)),
-    teams: TEAMS.filter((team) => match(`${team.name} ${team.location}`)),
+    teams: TEAMS.filter((team) => match(`${team.name} ${team.tag} ${team.location} ${team.gameName} ${team.roster.map((player) => player.handle).join(" ")}`)),
   });
 });
 
@@ -503,7 +514,7 @@ async function askPerson(c: C, personId: string, history: { role: "user" | "assi
       messages: [
         {
           role: "system",
-          content: `You are ${person.name}, a fictional ${person.role} on Cantera, a demo esports talent platform. ${person.bio} All teams and games here are invented. Reply as a short, friendly plain-text chat message of at most three sentences, with no Markdown, in the language of the user. Never promise real money or a real contract, and never ask for personal or payment details.`,
+          content: `You are ${person.name}, a fictional ${person.role} on Cantera, a demo esports talent platform. ${person.bio}\n\nAll teams and games here are invented, and this is the world you live in:\n${worldBriefFor(person)}\n\nStick to those facts and don't mention real games or teams. If you're asked something they don't cover, say you'd have to check rather than making it up. Reply as a short, friendly plain-text chat message of at most three sentences, with no Markdown, in the language of the user. The whole conversation happens here on Cantera, so never suggest moving to Discord, email, a phone call or any other channel, and never invent links. Never promise real money or a real contract, and never ask for personal or payment details.`,
         },
         ...history,
       ],

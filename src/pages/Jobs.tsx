@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import { api, useApi } from "../lib/api";
 import { useSession, useUser } from "../lib/session";
 import type { Game, Listing, ListingDetail } from "../shared/types";
-import { Avatar, ErrorNote, Field, ListingCard, Modal, Status, bannerUrl, teamLogo } from "../ui/common";
+import { Avatar, ErrorNote, Field, ListingCard, Modal, Status, bannerUrl, gameLogo, teamLogo } from "../ui/common";
 
 const FILTERS = [
   ["", "All"],
@@ -73,14 +73,16 @@ export function Jobs() {
           <Status loading={games.loading} error={games.error} onRetry={games.reload} />
           <div className="job-grid">
             {games.data?.map((game) => (
-              <button key={game.id} className="game-card" onClick={() => setParams({ q: game.name })}>
-                <span className="job-banner" style={{ backgroundImage: `url(${bannerUrl(game.banner)})` }} />
-                <span className="game-card-body">
-                  <strong>{game.name}</strong>
-                  <span className="muted small">{game.genre}</span>
-                  <span>{game.description}</span>
+              <Link key={game.id} className="game-card" to={`/games/${game.id}`}>
+                <span className="game-art" style={{ backgroundImage: `url(${bannerUrl(game.banner)})` }}>
+                  <img className={`game-wordmark wordmark-${game.id}`} src={gameLogo(game.id)} alt={game.name} />
                 </span>
-              </button>
+                <span className="game-card-body">
+                  <span className="muted small">{game.genre} · {game.format}</span>
+                  <span>{game.description}</span>
+                  <span className="game-card-foot">{game.openRoles} open {game.openRoles === 1 ? "role" : "roles"}</span>
+                </span>
+              </Link>
             ))}
           </div>
         </>
@@ -204,7 +206,7 @@ export function JobDetail() {
           <dt>Job Type</dt><dd>{data.jobType}</dd>
           <dt>Location</dt><dd>{data.mode}</dd>
           <dt>Pay</dt><dd>${data.payMin}-{data.payMax}/hr</dd>
-          <dt>Game</dt><dd>{data.gameName}</dd>
+          <dt>Game</dt><dd><Link className="plain-link" to={`/games/${data.gameId}`}>{data.gameName}</Link></dd>
           <dt>Commitment</dt><dd>{data.hours}, {data.schedule.toLowerCase()}</dd>
         </dl>
       </aside>

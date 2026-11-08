@@ -19,6 +19,10 @@ The photos in `public/images/people/` come from [Pexels](https://www.pexels.com)
 
 The characters are fictional. Their names, jobs and AI-written messages have nothing to do with the people photographed or with the photographers, and none of those people endorse or are affiliated with this project.
 
-## Games
+## Games and teams
 
-The pictures in `public/images/banners/` and `public/images/highlights/` were generated with FLUX on Workers AI, using `scripts/generate-images.mjs`.
+The pictures in `public/images/banners/` and `public/images/highlights/` were generated with FLUX on Workers AI. `scripts/generate-images.mjs` shows how.
+
+## Logos
+
+The team logos in `public/images/teams/` and the game logos in `public/images/games/` were drawn for this project. Their lettering uses outlines from these typefaces, all under the [SIL Open Font License](https://openfontlicense.org): Alfa Slab One, Anton, Archivo Black, Big Shoulders Display, Cinzel and Rye.

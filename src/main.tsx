@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { SessionProvider, useSession } from "./lib/session";
 import { Auth } from "./pages/Auth";
+import { GamePage } from "./pages/Games";
 import { Home } from "./pages/Home";
 import { Inbox } from "./pages/Inbox";
 import { JobDetail, Jobs } from "./pages/Jobs";
@@ -31,6 +32,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="jobs" element={<Jobs />} />
         <Route path="jobs/:id" element={<JobDetail />} />
+        <Route path="games/:id" element={<GamePage />} />
         <Route path="teams" element={<Teams />} />
         <Route path="teams/:id" element={<TeamPage />} />
         <Route path="people" element={<People />} />

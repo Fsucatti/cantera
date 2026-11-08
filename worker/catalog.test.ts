@@ -1,6 +1,7 @@
+import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { CATEGORIES, SKILLS } from "../src/shared/types";
-import { GAMES, LISTINGS, PEOPLE, SHARED_POSTS, TEAMS, listingDetail, matchScore, recruiterFor, tidyReply } from "./catalog";
+import { CATEGORIES, LINKED_ACCOUNTS, SKILLS, THUMBNAILS } from "../src/shared/types";
+import { GAMES, LISTINGS, PEOPLE, SHARED_POSTS, TEAMS, listingDetail, matchScore, recruiterFor, teamContact, tidyReply, worldBriefFor } from "./catalog";
 import { hashProof, isPasswordProof, safeEqual } from "./security";
 
 describe("job matching", () => {
@@ -55,6 +56,61 @@ describe("the catalog", () => {
   it("doesn't mention the real people, teams or games from the source design", () => {
     const forbidden = /\b(ibai|shroud|pokimane|faker|skt|t1|astralis|g2|geng|liquid|isurus|100 thieves|riot|valorant|league of legends|dota|counter-strike|digital bridge)\b/i;
     expect(JSON.stringify({ GAMES, TEAMS, PEOPLE, LISTINGS, SHARED_POSTS })).not.toMatch(forbidden);
+    for (const person of PEOPLE) expect(worldBriefFor(person)).not.toMatch(forbidden);
+  });
+
+  it("tells each AI character about their own team and game", () => {
+    const devon = worldBriefFor(PEOPLE.find((person) => person.id === "devon") as (typeof PEOPLE)[number]);
+    expect(devon).toContain("Your team, B2:");
+    expect(devon).toContain("Silent retake:");
+    expect(devon).not.toContain("Wet pull:");
+    const unattached = worldBriefFor({ id: "x", name: "X", role: "Freelancer", headline: "", bio: "" });
+    expect(unattached).toContain("Railhead");
+    expect(unattached).not.toContain("Your team");
+  });
+
+  it("has every picture and logo it refers to", () => {
+    const image = (path: string) => new URL(`../public/images/${path}`, import.meta.url);
+    for (const game of GAMES) {
+      expect(existsSync(image(`banners/${game.banner}.webp`)), game.banner).toBe(true);
+      expect(existsSync(image(`games/${game.id}.svg`)), game.id).toBe(true);
+    }
+    for (const team of TEAMS) {
+      expect(existsSync(image(`banners/${team.banner}.webp`)), team.banner).toBe(true);
+      expect(existsSync(image(`teams/${team.id}.svg`)), team.id).toBe(true);
+    }
+    for (const listing of LISTINGS) expect(existsSync(image(`banners/${listing.banner}.webp`)), listing.banner).toBe(true);
+    for (const name of THUMBNAILS) expect(existsSync(image(`highlights/${name}.webp`)), name).toBe(true);
+  });
+
+  it("connects teams, games and people", () => {
+    const games = new Set(GAMES.map((game) => game.id));
+    for (const team of TEAMS) {
+      expect(team.gameIds.length).toBeGreaterThan(0);
+      expect(team.gameIds.every((id) => games.has(id)), team.id).toBe(true);
+      expect(GAMES.find((game) => game.id === team.gameIds[0])?.name).toBe(team.gameName);
+      expect(team.roster.length, team.id).toBeGreaterThan(0);
+      expect(teamContact(team.id), team.id).toBeDefined();
+    }
+    for (const game of GAMES) {
+      expect(LISTINGS.some((listing) => listing.gameId === game.id), game.id).toBe(true);
+      expect(TEAMS.some((team) => team.gameIds.includes(game.id)), game.id).toBe(true);
+      expect(LINKED_ACCOUNTS.some((account) => account.key === game.id), game.id).toBe(true);
+    }
+  });
+
+  it("names roster roles that exist in the team's main game", () => {
+    for (const team of TEAMS.filter((candidate) => candidate.id !== "second-monitor")) {
+      const roles = new Set(GAMES.find((game) => game.id === team.gameIds[0])?.roles.map((role) => role.name));
+      for (const player of team.roster) expect(roles.has(player.role), `${team.id}: ${player.role}`).toBe(true);
+    }
+  });
+
+  it("never dates a team before its main game came out", () => {
+    for (const team of TEAMS) {
+      const game = GAMES.find((candidate) => candidate.id === team.gameIds[0]) as (typeof GAMES)[number];
+      expect(Number(team.founded), team.id).toBeGreaterThanOrEqual(Number(game.released));
+    }
   });
 
   it("returns nothing for an unknown listing", () => {

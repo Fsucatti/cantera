@@ -24,34 +24,33 @@ export const LINKED_ACCOUNTS = [
   { key: "x", label: "X", group: "personal" },
   { key: "instagram", label: "Instagram", group: "personal" },
   { key: "linkedin", label: "LinkedIn", group: "personal" },
-  { key: "ember-arena", label: "Ember Arena", group: "gaming" },
-  { key: "vantage-strike", label: "Vantage Strike", group: "gaming" },
-  { key: "skyline-royale", label: "Skyline Royale", group: "gaming" },
+  { key: "wrackline", label: "Wrackline", group: "gaming" },
+  { key: "deadband", label: "Deadband", group: "gaming" },
+  { key: "curfew", label: "Curfew", group: "gaming" },
+  { key: "railhead", label: "Railhead", group: "gaming" },
 ] as const;
 
-export const THUMBNAILS = ["clash", "river", "forest", "siege"] as const;
+export const THUMBNAILS = ["tide", "shoal", "beached", "retake", "sirens", "junction"] as const;
 
 export interface Game {
   id: string;
   name: string;
   genre: string;
+  tagline: string;
   description: string;
   banner: string;
-}
-
-export interface Team {
-  id: string;
-  name: string;
-  tagline: string;
-  banner: string;
-  size: string;
-  location: string;
-  founded: string;
-  focusAreas: string[];
+  studio: string;
+  released: string;
+  format: string;
+  platforms: string;
   about: string[];
-  whatWeDo: string[];
-  faqs: { question: string; answer: string }[];
-  following?: boolean;
+  /** "Roles" in most games, "Companies" where players pick a faction instead. */
+  rolesTitle: string;
+  roles: { name: string; detail: string }[];
+  maps: string[];
+  circuit: { name: string; detail: string }[];
+  slang: { term: string; meaning: string }[];
+  openRoles?: number;
 }
 
 export interface Person {
@@ -60,6 +59,43 @@ export interface Person {
   role: string;
   headline: string;
   bio: string;
+}
+
+export interface Team {
+  id: string;
+  name: string;
+  /** The short tag shown on broadcasts. */
+  tag: string;
+  tagline: string;
+  banner: string;
+  size: string;
+  location: string;
+  founded: string;
+  league: string;
+  /** The first game is the team's main one. */
+  gameIds: string[];
+  gameName: string;
+  colors: string;
+  supporters: string;
+  focusAreas: string[];
+  about: string[];
+  whatWeDo: string[];
+  honorsTitle: string;
+  honors: { year: string; title: string; result: string }[];
+  rosterTitle: string;
+  roster: { handle: string; role: string; country: string }[];
+  faqs: { question: string; answer: string }[];
+  following?: boolean;
+}
+
+export interface GameDetail extends Game {
+  teams: Team[];
+  listings: Listing[];
+}
+
+export interface TeamDetail extends Team {
+  listings: Listing[];
+  contact: Person;
 }
 
 export interface Listing {

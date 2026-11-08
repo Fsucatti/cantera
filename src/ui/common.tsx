@@ -7,6 +7,7 @@ import type { Listing } from "../shared/types";
 
 export const bannerUrl = (name: string) => `/images/banners/${name}.webp`;
 export const teamLogo = (id: string) => `/images/teams/${id}.svg`;
+export const gameLogo = (id: string) => `/images/games/${id}.svg`;
 export const personPhoto = (id: string) => `/images/people/${id}.webp`;
 
 export function Avatar({ src, name, size = 40 }: { src: string | null | undefined; name: string; size?: number }) {
@@ -134,7 +135,7 @@ export function CreditLine() {
       Design by Julian Sucatti · Built by{" "}
       <a href="https://fsucatti-portfolio.fsucatti-portfolio.workers.dev" target="_blank" rel="noreferrer">Francisco Sucatti</a>
       <br />
-      Characters are fictional. Photos of people from <a href="https://www.pexels.com" target="_blank" rel="noreferrer">Pexels</a>, unrelated to this project.
+      Teams, games and characters are fictional. Photos of people from <a href="https://www.pexels.com" target="_blank" rel="noreferrer">Pexels</a>, unrelated to this project.
     </p>
   );
 }

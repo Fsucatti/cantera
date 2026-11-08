@@ -4,7 +4,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-do
 import { timeAgo, useApi } from "../lib/api";
 import { useUser } from "../lib/session";
 import type { Notification, SearchResults } from "../shared/types";
-import { Avatar, Modal, personPhoto, teamLogo } from "./common";
+import { Avatar, Modal, bannerUrl, personPhoto, teamLogo } from "./common";
 
 const MAIN_LINKS = [
   { to: "/", label: "Home", icon: Home, end: true },
@@ -42,9 +42,9 @@ function SearchDialog({ onClose }: { onClose: () => void }) {
         <section className="search-group">
           <div className="section-row"><h3>Top Games</h3><button className="link" onClick={() => go("/jobs?category=game")}>View all games</button></div>
           {data.games.slice(0, 3).map((game) => (
-            <button key={game.id} className="search-row" onClick={() => go(`/jobs?q=${encodeURIComponent(game.name)}`)}>
-              <span className="search-thumb" style={{ backgroundImage: `url(/images/banners/${game.banner}.webp)` }} />
-              {game.name}
+            <button key={game.id} className="search-row" onClick={() => go(`/games/${game.id}`)}>
+              <span className="search-thumb" style={{ backgroundImage: `url(${bannerUrl(game.banner)})` }} />
+              {game.name}<span className="muted"> · {game.genre}</span>
             </button>
           ))}
         </section>
@@ -145,17 +145,26 @@ export function Shell() {
   return (
     <div className="shell">
       <nav className="nav" aria-label="Main">
-        <Link className="nav-logo" to="/" aria-label="Cantera home"><img src="/logo.svg" alt="" width={30} height={30} /></Link>
-        <div className="nav-group">
+        <Link className="nav-logo" to="/" aria-label="Cantera home">
+          <img src="/logo.svg" alt="" width={30} height={30} />
+          <span className="nav-wordmark">Cantera</span>
+        </Link>
+        {/* On phones this group becomes the tab bar at the bottom of the screen, with labels and the inbox. */}
+        <div className="nav-group nav-tabs">
           {MAIN_LINKS.map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} className="nav-item" aria-label={label} title={label}>
-              <Icon size={18} aria-hidden="true" />
+              <span className="nav-icon"><Icon size={18} aria-hidden="true" /></span>
+              <span className="nav-label">{label}</span>
             </NavLink>
           ))}
+          <NavLink to="/inbox" className="nav-item only-phone" aria-label="Inbox" title="Inbox">
+            <span className="nav-icon"><MessageSquare size={18} aria-hidden="true" /></span>
+            <span className="nav-label">Inbox</span>
+          </NavLink>
         </div>
         <div className="nav-group nav-bottom">
           <button className="nav-item" aria-label="Search" title="Search" onClick={() => setSearching(true)}><Search size={18} aria-hidden="true" /></button>
-          <NavLink to="/inbox" className="nav-item" aria-label="Inbox" title="Inbox"><MessageSquare size={18} aria-hidden="true" /></NavLink>
+          <NavLink to="/inbox" className="nav-item only-desktop" aria-label="Inbox" title="Inbox"><MessageSquare size={18} aria-hidden="true" /></NavLink>
           <Notifications />
           <NavLink to="/settings/profile" className="nav-avatar" aria-label="Your profile and settings" title="Profile"><Avatar src={user.avatar} name={user.name} size={36} /></NavLink>
         </div>
